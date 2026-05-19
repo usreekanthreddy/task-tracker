@@ -1,0 +1,176 @@
+<!--
+  ============================================================
+  BLOGGER POST — PASTE INSTRUCTIONS
+  ============================================================
+  1. In Blogger, click "+ New Post".
+  2. Switch the editor to "HTML view" (the < > icon, top left).
+  3. Paste everything BELOW the ===== PASTE FROM HERE ===== line.
+  4. Set the Title (top of the post editor) to:
+        Building One App in Three Stacks: React + Python + PowerApps,
+        All Tied Together by Microsoft Entra ID
+  5. Open the right-side panel and add these to "Labels":
+        react, python, fastapi, powerapps, dataverse, entra-id,
+        azure-ad, msal, low-code, integration, tutorial
+  6. Click "Search Description" and paste:
+        A hands-on walkthrough of a Task Tracker app that uses
+        React, FastAPI, and PowerApps together, sharing a single
+        Microsoft Dataverse table and one Entra ID identity.
+  7. Publish!
+  ============================================================
+  ===== PASTE FROM HERE =====
+-->
+
+<style>
+  .post-body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.65; color: #1d1d1f; }
+  .post-body h2 { color: #1F3864; border-bottom: 2px solid #D5E8F0; padding-bottom: 6px; margin-top: 32px; }
+  .post-body h3 { color: #2E74B5; margin-top: 24px; }
+  .post-body pre { background: #f5f7fa; border-left: 4px solid #0078d4; padding: 14px 18px; overflow-x: auto; border-radius: 6px; font-size: 14px; }
+  .post-body code { font-family: Consolas, Monaco, monospace; background: #f0f2f5; padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
+  .post-body pre code { background: transparent; padding: 0; }
+  .post-body table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .post-body th, .post-body td { border: 1px solid #d5dde6; padding: 8px 12px; text-align: left; }
+  .post-body th { background: #D5E8F0; }
+  .post-body blockquote { border-left: 4px solid #ff8c00; background: #fff8ee; margin: 16px 0; padding: 12px 18px; border-radius: 4px; }
+  .post-body .callout { background: #eef6fb; border-radius: 8px; padding: 12px 16px; margin: 16px 0; }
+</style>
+
+<div class="post-body">
+
+<p><em>One database. One identity. Three completely different UIs. Here's how to make a custom React frontend, a Python API, and a Microsoft PowerApps canvas app all sing from the same songbook — without anyone losing their minds.</em></p>
+
+<div class="callout">
+<strong>What you'll build:</strong> a small <em>Task Tracker</em> app where developers see a slick React UI, business users open a no-code PowerApps screen, both hit the same FastAPI backend, both store data in Microsoft Dataverse, and everybody signs in with their work email exactly once.
+</div>
+
+<h2>Why this combination is actually useful</h2>
+
+<p>If you've ever worked at a company that runs on Microsoft 365, you already know the tension: the dev team wants <strong>React</strong> because it's fast and flexible, the data engineers want <strong>Python</strong> because every integration in the world has a Python SDK, and somebody in operations <em>swears</em> the next project should be a <strong>PowerApps</strong> canvas app because they built one last quarter in an afternoon.</p>
+
+<p>The good news: you don't have to choose. With <strong>Microsoft Entra ID</strong> as the single identity layer and <strong>Microsoft Dataverse</strong> as the single source of truth, all three play together remarkably well.</p>
+
+<h2>The architecture, in one picture</h2>
+
+<pre><code>          React 19 SPA              PowerApps Canvas App
+                |                              |
+       Bearer JWT (MSAL)            Native or custom connector
+                v                              |
+        +-----------------+                    |
+        | FastAPI backend |&lt;-------------------+
+        +-----------------+
+                |
+                v
+        Microsoft Dataverse  (cr123_tasks table)</code></pre>
+
+<p>Two UI paths converge on one Dataverse table. Entra ID hands out tokens that every layer trusts. That's the whole magic.</p>
+
+<h2>Step 1 — Set up Entra ID (the part everyone skips and regrets)</h2>
+
+<p>You need <em>two</em> app registrations in Microsoft Entra Admin Center:</p>
+
+<ul>
+  <li><strong>Task Tracker API</strong> — confidential client (has a secret), exposes a scope called <code>access_as_user</code>, holds permissions to call Dataverse.</li>
+  <li><strong>Task Tracker SPA</strong> — public client (browser), with a single-page redirect URI of <code>http://localhost:5173</code>, granted delegated access to that <code>access_as_user</code> scope.</li>
+</ul>
+
+<p>Don't forget the magic button: <strong>Grant admin consent</strong>. Skipping this is the #1 cause of <code>AADSTS65001</code> errors. Decode any troublesome token at <a href="https://jwt.ms">jwt.ms</a> — 80% of auth bugs are obvious once you see the claims.</p>
+
+<h2>Step 2 — The FastAPI backend</h2>
+
+<p>The whole token-validation story is <em>nine lines</em> thanks to <a href="https://intility.github.io/fastapi-azure-auth/">fastapi-azure-auth</a>:</p>
+
+<pre><code>from fastapi_azure_auth import SingleTenantAzureAuthorizationCodeBearer
+
+azure_scheme = SingleTenantAzureAuthorizationCodeBearer(
+    app_client_id=API_CLIENT_ID,
+    tenant_id=TENANT_ID,
+    scopes={f"api://{API_CLIENT_ID}/access_as_user": "access_as_user"},
+)</code></pre>
+
+<p>For Dataverse, FastAPI gets its own app-only token via the confidential MSAL client:</p>
+
+<pre><code>app = msal.ConfidentialClientApplication(
+    client_id=API_CLIENT_ID,
+    client_credential=API_CLIENT_SECRET,
+    authority=f"https://login.microsoftonline.com/{TENANT_ID}",
+)
+token = app.acquire_token_for_client(scopes=[f"{DATAVERSE_URL}/.default"])
+</code></pre>
+
+<p>From there it's just OData v4 calls against <code>/api/data/v9.2/cr123_tasks</code>.</p>
+
+<h2>Step 3 — The React 19 frontend</h2>
+
+<p>MSAL React turns sign-in into a two-line affair:</p>
+
+<pre><code>import { MsalProvider } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
+
+const instance = new PublicClientApplication(msalConfig);
+await instance.initialize();   // required in MSAL v3+
+
+&lt;MsalProvider instance={instance}&gt;
+  &lt;App /&gt;
+&lt;/MsalProvider&gt;</code></pre>
+
+<p>Then calling the API is just <code>acquireTokenSilent</code> + <code>fetch</code>:</p>
+
+<pre><code>const result = await instance.acquireTokenSilent({
+  scopes: [`api://${API_CLIENT_ID}/access_as_user`],
+  account: instance.getActiveAccount(),
+});
+
+await fetch(`${apiBase}/api/tasks`, {
+  headers: { Authorization: `Bearer ${result.accessToken}` },
+});</code></pre>
+
+<h2>Step 4 — PowerApps, the easy mode</h2>
+
+<p>Here's the part that always surprises developers: PowerApps doesn't need your API for basic CRUD. The native Dataverse connector talks directly to the same <code>cr123_tasks</code> table, and the user is already signed in to Power Apps via Entra ID. One formula and you have a working data grid:</p>
+
+<pre><code>Sort(
+  Filter(Tasks, ddStatus.Selected.Value = "All"
+                || cr123_status = ddStatus.Selected.Value),
+  cr123_duedate
+)</code></pre>
+
+<p>Use a <strong>custom connector</strong> (import your FastAPI's <code>/openapi.json</code>) only when you need PowerApps to go through your Python business logic — for example, a custom validation rule that you don't want to duplicate in Power Fx.</p>
+
+<h2>The "aha" moments</h2>
+
+<ul>
+  <li><strong>One identity, three UIs.</strong> The same user, the same access, three completely different rendering surfaces.</li>
+  <li><strong>The token's <code>aud</code> claim is the contract.</strong> FastAPI trusts a token only if its audience matches the API's client id. That's why you need two app registrations.</li>
+  <li><strong>Dataverse gives you free RBAC.</strong> Security roles on the table apply whether the request comes from React, FastAPI, or PowerApps.</li>
+  <li><strong>jwt.ms is your best friend.</strong> Most auth pain disappears the moment you actually <em>read</em> the token.</li>
+</ul>
+
+<h2>What's next</h2>
+
+<p>This pattern scales surprisingly well. From here you can:</p>
+
+<ul>
+  <li>Add a <strong>Power Automate</strong> flow that emails the assignee when a task is created — zero extra code in FastAPI.</li>
+  <li>Add server-side <strong>role-based access</strong> in FastAPI by reading the <code>roles</code> claim from the JWT.</li>
+  <li>Deploy: React to <strong>Azure Static Web Apps</strong>, FastAPI to <strong>Azure Container Apps</strong>, PowerApps stays in the Power Platform.</li>
+</ul>
+
+<blockquote>
+<strong>Try it yourself.</strong> Drop a comment below telling me which layer you'd add first — the BI dashboard in Power BI, or a mobile Power Apps screen? I'll cover the most-requested one in the next post.
+</blockquote>
+
+<h2>Sources &amp; further reading</h2>
+
+<ul>
+  <li><a href="https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-single-page-app-react-prepare-app">Microsoft Learn — Tutorial: Prepare a React SPA for authentication</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/authenticate-web-api">Microsoft Learn — Authenticate to Dataverse with the Web API</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/overview">Microsoft Learn — Use the Dataverse Web API</a></li>
+  <li><a href="https://intility.github.io/fastapi-azure-auth/">fastapi-azure-auth documentation</a></li>
+  <li><a href="https://vite.dev/guide/">Vite — Getting Started</a></li>
+  <li><a href="https://ashiqf.com/2025/03/29/calling-dataverse-web-api-using-delegated-permissions-in-a-custom-connector/">Calling Dataverse Web API via custom connector (Mohamed Ashiq Faleel)</a></li>
+</ul>
+
+<p><em>Last verified against Microsoft documentation: May 2026.</em></p>
+
+</div>
+
+<!-- ===== PASTE TO HERE ===== -->

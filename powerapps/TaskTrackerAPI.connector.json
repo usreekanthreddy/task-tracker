@@ -1,0 +1,105 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "TaskTrackerAPI",
+    "description": "Custom connector for the FastAPI Task Tracker backend.",
+    "version": "1.0.0"
+  },
+  "host": "your-api.example.com",
+  "basePath": "/",
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/tasks": {
+      "get": {
+        "summary": "List tasks",
+        "operationId": "GetTasks",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "type": "array", "items": { "$ref": "#/definitions/Task" } }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create task",
+        "operationId": "CreateTask",
+        "parameters": [
+          { "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/TaskCreate" } }
+        ],
+        "responses": { "201": { "description": "Created", "schema": { "$ref": "#/definitions/Task" } } }
+      }
+    },
+    "/api/tasks/{task_id}": {
+      "get": {
+        "summary": "Get task",
+        "operationId": "GetTask",
+        "parameters": [{ "name": "task_id", "in": "path", "required": true, "type": "string" }],
+        "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/Task" } } }
+      },
+      "patch": {
+        "summary": "Update task",
+        "operationId": "UpdateTask",
+        "parameters": [
+          { "name": "task_id", "in": "path", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "required": true, "schema": { "$ref": "#/definitions/TaskUpdate" } }
+        ],
+        "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/Task" } } }
+      },
+      "delete": {
+        "summary": "Delete task",
+        "operationId": "DeleteTask",
+        "parameters": [{ "name": "task_id", "in": "path", "required": true, "type": "string" }],
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    }
+  },
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "assignee_email": { "type": "string" },
+        "due_date": { "type": "string", "format": "date-time" }
+      }
+    },
+    "TaskCreate": {
+      "type": "object",
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "assignee_email": { "type": "string" },
+        "due_date": { "type": "string", "format": "date-time" }
+      }
+    },
+    "TaskUpdate": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "assignee_email": { "type": "string" },
+        "due_date": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauth2_auth": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+      "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+      "scopes": { "api://REPLACE_API_CLIENT_ID/access_as_user": "Call Task Tracker API" }
+    }
+  },
+  "security": [{ "oauth2_auth": ["api://REPLACE_API_CLIENT_ID/access_as_user"] }]
+}

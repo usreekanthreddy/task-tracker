@@ -1,0 +1,43 @@
+# azd deployment manifest. Run `azd up` from the project root.
+# https://aka.ms/azd-yaml
+
+name: task-tracker
+metadata:
+  template: task-tracker@1.0.0
+
+infra:
+  provider: bicep
+  path: infra
+  module: main
+
+services:
+  api:
+    project: ./backend
+    language: python
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: .
+      remoteBuild: true       # Use ACR Tasks instead of local Docker (Cloud-Shell-friendly)
+
+  web:
+    project: ./frontend
+    language: js
+    host: staticwebapp
+    dist: dist
+
+hooks:
+  postprovision:
+    shell: pwsh
+    run: |
+      Write-Host "==============================================" -ForegroundColor Cyan
+      Write-Host "Deployment provisioned. Two follow-ups:" -ForegroundColor Cyan
+      Write-Host ""
+      Write-Host "1. Add the SPA URL to Task Tracker SPA app registration:" -ForegroundColor Yellow
+      Write-Host "   Entra ID -> App registrations -> Task Tracker SPA -> Authentication"
+      Write-Host "   -> Add platform -> Single-page application"
+      Write-Host "   -> Redirect URI: https://$(azd env get-value STATIC_WEB_APP_HOSTNAME)"
+      Write-Host ""
+      Write-Host "2. The API base URL the SPA needs is:" -ForegroundColor Yellow
+      Write-Host "   $(azd env get-value API_BASE_URL)"
+      Write-Host "   This is already baked into frontend/.env.production at build ti

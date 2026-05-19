@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="azure" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="100%" stop-color="#005A9E"/>
+    </linearGradient>
+    <linearGradient id="entra" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#742774"/>
+      <stop offset="100%" stop-color="#5B1E5B"/>
+    </linearGradient>
+    <linearGradient id="dataverse" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B4009E"/>
+      <stop offset="100%" stop-color="#7B0066"/>
+    </linearGradient>
+    <linearGradient id="user" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3C3C3C"/>
+      <stop offset="100%" stop-color="#1F1F1F"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0078D4"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#742774"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="38" font-size="26" font-weight="700" text-anchor="middle" fill="#1F3864">Task Tracker — Deployed Architecture</text>
+  <text x="600" y="62" font-size="14" text-anchor="middle" fill="#666">React + FastAPI + PowerApps · Microsoft Entra ID auth · Microsoft Dataverse · Azure Cloud</text>
+
+  <!-- =================== USER =================== -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="100" width="120" height="60" rx="30" fill="url(#user)"/>
+    <text x="600" y="128" font-size="14" font-weight="600" text-anchor="middle" fill="white">👤 User</text>
+    <text x="600" y="146" font-size="11" text-anchor="middle" fill="#bbb">Browser</text>
+  </g>
+
+  <!-- =================== ENTRA ID =================== -->
+  <g filter="url(#shadow)">
+    <rect x="950" y="100" width="220" height="120" rx="10" fill="url(#entra)"/>
+    <text x="1060" y="128" font-size="15" font-weight="700" text-anchor="middle" fill="white">Microsoft Entra ID</text>
+    <text x="1060" y="146" font-size="11" text-anchor="middle" fill="#e6c9e6">vkn2k.onmicrosoft.com</text>
+    <line x1="970" y1="155" x2="1150" y2="155" stroke="#a87aa8" stroke-width="0.5"/>
+    <text x="1060" y="175" font-size="11" text-anchor="middle" fill="#fff">Task Tracker SPA app</text>
+    <text x="1060" y="192" font-size="11" text-anchor="middle" fill="#fff">Task Tracker API app</text>
+    <text x="1060" y="209" font-size="10" font-style="italic" text-anchor="middle" fill="#e6c9e6">issues v2 JWT tokens</text>
+  </g>
+
+  <!-- =================== AZURE BOUNDARY =================== -->
+  <g>
+    <rect x="40" y="250" width="780" height="430" rx="14" fill="none" stroke="#0078D4" stroke-width="2" stroke-dasharray="6,4"/>
+    <rect x="62" y="240" width="220" height="22" rx="4" fill="#0078D4"/>
+    <text x="172" y="256" font-size="12" font-weight="700" text-anchor="middle" fill="white">Azure · rg-tt-prod · eastus2</text>
+  </g>
+
+  <!-- =================== STATIC WEB APP =================== -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="300" width="240" height="160" rx="10" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+    <rect x="80" y="300" width="240" height="32" rx="10" fill="url(#azure)"/>
+    <rect x="80" y="320" width="240" height="12" fill="url(#azure)"/>
+    <text x="200" y="322" font-size="13" font-weight="700" text-anchor="middle" fill="white">Azure Static Web App</text>
+    <text x="200" y="358" font-size="13" font-weight="600" text-anchor="middle" fill="#0078D4">React 19 · MSAL.js</text>
+    <text x="200" y="380" font-size="11" text-anchor="middle" fill="#444">icy-forest-0d64b060f</text>
+    <text x="200" y="395" font-size="11" text-anchor="middle" fill="#444">.7.azurestaticapps.net</text>
+    <line x1="100" y1="410" x2="300" y2="410" stroke="#ddd"/>
+    <text x="200" y="430" font-size="10" text-anchor="middle" fill="#777">Vite build · CDN-served</text>
+    <text x="200" y="446" font-size="10" text-anchor="middle" fill="#777">Free tier · global edge</text>
+  </g>
+
+  <!-- =================== CONTAINER APPS ENVIRONMENT =================== -->
+  <g>
+    <rect x="370" y="300" width="430" height="280" rx="10" fill="#F4F8FC" stroke="#0078D4" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="585" y="320" font-size="11" font-weight="600" text-anchor="middle" fill="#0078D4">Container Apps Environment · tt-cae</text>
+  </g>
+
+  <!-- Container App -->
+  <g filter="url(#shadow)">
+    <rect x="400" y="340" width="240" height="160" rx="10" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+    <rect x="400" y="340" width="240" height="32" rx="10" fill="url(#azure)"/>
+    <rect x="400" y="360" width="240" height="12" fill="url(#azure)"/>
+    <text x="520" y="362" font-size="13" font-weight="700" text-anchor="middle" fill="white">Azure Container App</text>
+    <text x="520" y="398" font-size="13" font-weight="600" text-anchor="middle" fill="#0078D4">FastAPI · Python 3.12</text>
+    <text x="520" y="420" font-size="11" text-anchor="middle" fill="#444">tt-api-xs2pkkbtydvlm</text>
+    <text x="520" y="435" font-size="11" text-anchor="middle" fill="#444">.azurecontainerapps.io</text>
+    <line x1="420" y1="450" x2="620" y2="450" stroke="#ddd"/>
+    <text x="520" y="470" font-size="10" text-anchor="middle" fill="#777">Validates JWT · CORS</text>
+    <text x="520" y="486" font-size="10" text-anchor="middle" fill="#777">Scales 0–3 replicas</text>
+  </g>
+
+  <!-- ACR -->
+  <g filter="url(#shadow)">
+    <rect x="660" y="340" width="130" height="75" rx="8" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="725" y="362" font-size="11" font-weight="700" text-anchor="middle" fill="#0078D4">📦 ACR</text>
+    <text x="725" y="378" font-size="9" text-anchor="middle" fill="#444">Container Registry</text>
+    <text x="725" y="394" font-size="9" text-anchor="middle" fill="#777">api-tt-prod:fixed2</text>
+    <text x="725" y="408" font-size="8" text-anchor="middle" fill="#777">Docker image</text>
+  </g>
+
+  <!-- Managed Identity -->
+  <g filter="url(#shadow)">
+    <rect x="660" y="425" width="130" height="75" rx="8" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="725" y="447" font-size="11" font-weight="700" text-anchor="middle" fill="#0078D4">🔑 Managed Identity</text>
+    <text x="725" y="463" font-size="9" text-anchor="middle" fill="#444">tt-mi-xs2pkkbtydvlm</text>
+    <text x="725" y="479" font-size="9" text-anchor="middle" fill="#777">AcrPull role</text>
+    <text x="725" y="493" font-size="8" text-anchor="middle" fill="#777">No stored creds</text>
+  </g>
+
+  <!-- Observability -->
+  <g filter="url(#shadow)">
+    <rect x="400" y="510" width="390" height="50" rx="8" fill="white" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="595" y="530" font-size="11" font-weight="700" text-anchor="middle" fill="#0078D4">📊 Log Analytics + Application Insights</text>
+    <text x="595" y="548" font-size="10" text-anchor="middle" fill="#666">tt-log-xs2pkkbtydvlm · tt-appi-xs2pkkbtydvlm · all logs + traces</text>
+  </g>
+
+  <!-- =================== POWERAPPS =================== -->
+  <g filter="url(#shadow)">
+    <rect x="900" y="300" width="240" height="160" rx="10" fill="white" stroke="#742774" stroke-width="1.5"/>
+    <rect x="900" y="300" width="240" height="32" rx="10" fill="url(#entra)"/>
+    <rect x="900" y="320" width="240" height="12" fill="url(#entra)"/>
+    <text x="1020" y="322" font-size="13" font-weight="700" text-anchor="middle" fill="white">Microsoft PowerApps</text>
+    <text x="1020" y="358" font-size="13" font-weight="600" text-anchor="middle" fill="#742774">Canvas App · Power Fx</text>
+    <text x="1020" y="380" font-size="11" text-anchor="middle" fill="#444">Native Dataverse connector</text>
+    <text x="1020" y="395" font-size="11" text-anchor="middle" fill="#444">or Custom API connector</text>
+    <line x1="920" y1="410" x2="1120" y2="410" stroke="#ddd"/>
+    <text x="1020" y="430" font-size="10" text-anchor="middle" fill="#777">Low-code · Internal users</text>
+    <text x="1020" y="446" font-size="10" text-anchor="middle" fill="#777">Same data as React</text>
+  </g>
+
+  <!-- =================== DATAVERSE =================== -->
+  <g filter="url(#shadow)">
+    <rect x="380" y="710" width="440" height="80" rx="10" fill="white" stroke="#B4009E" stroke-width="1.5"/>
+    <rect x="380" y="710" width="440" height="32" rx="10" fill="url(#dataverse)"/>
+    <rect x="380" y="730" width="440" height="12" fill="url(#dataverse)"/>
+    <text x="600" y="732" font-size="13" font-weight="700" text-anchor="middle" fill="white">🗄️  Microsoft Dataverse</text>
+    <text x="600" y="768" font-size="12" font-weight="600" text-anchor="middle" fill="#B4009E">orgf327dc4f.crm.dynamics.com — table cr0b4_tasks</text>
+    <text x="600" y="784" font-size="10" text-anchor="middle" fill="#777">title · description · status · priority · assignee_email · due_date</text>
+  </g>
+
+  <!-- =================== ARROWS =================== -->
+
+  <!-- User → SWA -->
+  <path d="M 580 160 Q 400 240 200 300" stroke="#0078D4" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+  <text x="370" y="232" font-size="10" font-weight="600" fill="#0078D4">1. Open app (HTTPS)</text>
+
+  <!-- User → Entra (sign in) -->
+  <path d="M 660 130 L 950 130" stroke="#742774" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+  <text x="805" y="123" font-size="10" font-weight="600" text-anchor="middle" fill="#742774">2. Sign in with Microsoft</text>
+
+  <!-- Entra → SWA (token) -->
+  <path d="M 950 200 Q 600 270 280 305" stroke="#742774" stroke-width="2" fill="none" marker-end="url(#arrow-purple)" stroke-dasharray="4,3"/>
+  <text x="640" y="262" font-size="10" font-weight="600" fill="#742774">3. Access token (v2 JWT)</text>
+
+  <!-- SWA → Container App (API) -->
+  <path d="M 320 400 L 400 400" stroke="#0078D4" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+  <text x="360" y="394" font-size="10" font-weight="600" text-anchor="middle" fill="#0078D4">4. Bearer token</text>
+
+  <!-- Container App ↔ ACR (pull) -->
+  <path d="M 640 380 L 660 380" stroke="#555" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- MI → ACR -->
+  <path d="M 725 425 L 725 415" stroke="#555" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Container App → Dataverse -->
+  <path d="M 520 500 L 520 710" stroke="#B4009E" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="535" y="600" font-size="10" font-weight="600" fill="#B4009E">5. OData v4 +</text>
+  <text x="535" y="614" font-size="10" font-weight="600" fill="#B4009E">app-only token</text>
+
+  <!-- PowerApps → Dataverse -->
+  <path d="M 1020 460 Q 1020 580 800 740" stroke="#B4009E" stroke-width="2" fill="none" marker-end="url(#arrow)" stroke-dasharray="4,3"/>
+  <text x="1050" y="600" font-size="10" font-weight="600" fill="#B4009E">Native</text>
+  <text x="1050" y="614" font-size="10" font-weight="600" fill="#B4009E">connector</text>
+
+  <!-- Container App → App Insights -->
+  <path d="M 520 500 L 520 510" stroke="#555" stroke-width="1" fill="none"/>
+
+  <!-- Legend -->
+  <g transform="translate(40, 720)">
+    <rect x="0" y="0" width="290" height="76" rx="6" fill="white" stroke="#ddd"/>
+    <text x="12" y="18" font-size="11" font-weight="700" fill="#333">Legend</text>
+    <line x1="12" y1="32" x2="42" y2="32" stroke="#0078D4" stroke-width="2"/>
+    <text x="48" y="36" font-size="10" fill="#444">HTTPS — React app traffic</text>
+    <line x1="12" y1="48" x2="42" y2="48" stroke="#742774" stroke-width="2"/>
+    <text x="48" y="52" font-size="10" fill="#444">OAuth 2.0 / OIDC — Entra ID</text>
+    <line x1="12" y1="64" x2="42" y2="64" stroke="#B4009E" stroke-width="2"/>
+    <text x="48" y="68" font-size="10" fill="#444">OData v4 — Dataverse</text>
+  </g>
+</svg>

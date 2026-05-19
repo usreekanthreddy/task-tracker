@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": { "value": "${AZURE_ENV_NAME}" },
+    "location":        { "value": "${AZURE_LOCATION}" },
+    "tenantId":        { "value": "${TENANT_ID=00000000-0000-0000-0000-000000000000}" },
+    "apiClientId":     { "value": "${API_CLIENT_ID=00000000-0000-0000-0000-000000000000}" },
+    "apiClientSecret": { "value": "${API_CLIENT_SECRET}" },
+    "spaClientId":     { "value": "${SPA_CLIENT_ID=00000000-0000-0000-0000-000000000000}" },
+    "dataverseUrl":    { "value": "${DATAVERSE_URL=https://orgXXXXXXXX.crm.dynamics.com}" }
+  
